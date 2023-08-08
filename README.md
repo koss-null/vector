@@ -11,6 +11,8 @@ Vector is an implementation of a dynamically-expandable array, winch is implemen
 ## Table of Contents
 - [TBD](#tbd)
 
+For examples please see vector_test.go. For available functions list: vector.go
+
 ## Contributions
 
 I will accept any pr's with the functionality marked as TBD. 
