@@ -22,12 +22,6 @@ type Vector[T any] struct {
 }
 
 func New[T any](a ...T) *Vector[T] {
-	var t T
-	blockLen := initBlockLenBytes / int(unsafe.Sizeof(t))
-	if blockLen == 0 {
-		blockLen = 1
-	}
-
 	v := &Vector[T]{
 		curBlock: 0,
 		curPos:   0,
