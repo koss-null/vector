@@ -1,6 +1,7 @@
 package vecotor
 
 import (
+	"container/list"
 	"math"
 	"sync"
 	"unsafe"
@@ -69,6 +70,12 @@ func (v *Vector[T]) Slice() []T {
 	return s
 }
 
+// TODO
+func (v *Vector[T]) Remove(a T, eq func(T, T) bool) bool {
+	return false
+}
+
+// TODO
 func (v *Vector[T]) PushFront(a ...T) {
 }
 
@@ -76,12 +83,42 @@ func (v *Vector[T]) Len() int {
 	return v.len
 }
 
-func (v *Vector[T]) Find(a T) bool {
+func Eq[T comparable](a, b T) bool {
+	return a == b
+}
+
+func (v *Vector[T]) Contains(eq func(T, T) bool, a T) bool {
+	for i := range v.a {
+		for j := range v.a[i] {
+			if eq(a, v.a[i][j]) {
+				return true
+			}
+		}
+	}
+
 	return false
 }
 
-func (v *Vector[T]) FindMany(a ...T) []bool {
-	return nil
+func (v *Vector[T]) ContainsMany(eq func(T, T) bool, a ...T) []bool {
+	res := make([]bool, len(a))
+
+	leftToCheck := list.New()
+	for i := range a {
+		leftToCheck.PushBack(i)
+	}
+
+	for i := range v.a {
+		for j := range v.a[i] {
+			for aidx := leftToCheck.Front(); aidx != nil; aidx = aidx.Next() {
+				if eq(v.a[i][j], a[aidx.Value.(int)]) {
+					res[aidx.Value.(int)] = true
+					leftToCheck.Remove(aidx)
+				}
+			}
+		}
+	}
+
+	return res
 }
 
 func (v *Vector[T]) regroupBlocks(length int) (cb int, pos int, blockLen int, countDown int) {
